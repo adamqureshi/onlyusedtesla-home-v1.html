@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Only Used Tesla — Shop, Sell, or Get a Cash Offer</title>
+  <meta name="description" content="Only Used Tesla: the fast, focused marketplace to shop used Teslas, list your car for $47, connect your Tesla, or get a cash offer sent to our dealer network." />
+  <style>
+    /* === Base reset & variables (grayscale, system fonts) === */
+    :root {
+      --bg: #f7f7f7;
+      --panel: #ffffff;
+      --ink: #111111;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --brand: #111111;
+      --accent: #0a0a0a;
+      --ok: #065f46;
+      --warn: #92400e;
+      --bad: #7f1d1d;
+      --focus: #111111;
+      --radius: 14px;
+      --shadow: 0 2px 14px rgba(0,0,0,.06);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a { color: var(--ink); text-decoration: none; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+      border-radius: 8px;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .stack { display: grid; gap: 16px; }
+    .stack-lg { display: grid; gap: 28px; }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn {
+      appearance: none; border: 1px solid var(--ink); background: var(--ink); color: #fff;
+      padding: 12px 16px; border-radius: 999px; font-weight: 600; cursor: pointer;
+      transition: transform .06s ease, background .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .btn.secondary { background: #fff; color: var(--ink); border-color: var(--line); }
+    .btn.ghost { background: transparent; color: var(--ink); border-color: var(--ink); }
+    .btn:hover { transform: translateY(-1px); }
+    .chip {
+      display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); padding:6px 10px;
+      border-radius:999px; background:#fff; font-size:12px; color:var(--muted);
+    }
+    header.site {
+      position: sticky; top: 0; z-index: 30;
+      background: rgba(255,255,255,.9); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav { display:flex; align-items:center; justify-content:space-between; gap: 12px; }
+    .brand { display:flex; align-items:center; gap:12px; font-weight: 800; letter-spacing:.2px; }
+    .brand-badge { width:28px; height:28px; border-radius:8px; background:#111; display:grid; place-items:center; color:#fff; font-size:14px; }
+    .nav a { color: var(--muted); font-weight: 600; }
+    .nav .links { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .hero {
+      padding: 28px 0 8px; 
+    }
+    .hero-card {
+      background: var(--panel); border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 28px;
+    }
+    h1 { font-size: clamp(28px, 4vw, 40px); line-height:1.1; margin:0; }
+    .sub { color: var(--muted); font-size: 16px; max-width: 72ch; }
+    .kpis { display:flex; gap:12px; flex-wrap:wrap; }
+    .kpi { background:#fff; border:1px solid var(--line); border-radius: 12px; padding:10px 14px; font-size: 14px; color: var(--muted); }
+    .pill { padding: 6px 10px; border-radius: 999px; border:1px solid var(--line); background:#fff; font-size:12px; color: var(--muted); }
+    /* Search panel */
+    .search-panel {
+      background:#fff; border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 16px;
+    }
+    .search-grid { display:grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+    .search-grid .wide { grid-column: span 2; }
+    .search-grid .xl { grid-column: span 3; }
+    .search-grid .full { grid-column: 1/-1; }
+    label { font-size:12px; color:var(--muted); font-weight:700; letter-spacing:.2px; }
+    input, select {
+      width:100%; padding: 12px 12px; border-radius: 12px; border:1px solid var(--line); background:#fff; color:var(--ink);
+    }
+    details.advanced { border-top:1px dashed var(--line); padding-top: 10px; }
+    details summary { cursor:pointer; color: var(--muted); font-weight:700; }
+    /* Listings grid */
+    .grid { display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card {
+      border:1px solid var(--line); border-radius: var(--radius); background:#fff; box-shadow: var(--shadow);
+      padding: 16px; display:flex; flex-direction: column; gap: 12px;
+    }
+    .card .title { font-weight:800; }
+    .kv { display:grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px; color: #222; }
+    .kv div { display:flex; justify-content: space-between; gap:8px; border-bottom:1px dashed var(--line); padding-bottom:6px; }
+    .price { font-weight:800; font-size:18px; }
+    .tags { display:flex; gap:8px; flex-wrap:wrap; }
+    .note { font-size:12px; color:var(--muted); }
+    /* Sections */
+    section { padding: 8px 0 24px; }
+    .panel { background:#fff; border:1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+    .cols-3 { display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .cols-2 { display:grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    footer { padding: 28px 0 40px; color: var(--muted); }
+    .small { font-size:12px; color: var(--muted); }
+    .cta-bar {
+      position: sticky; bottom: 12px; z-index: 20; display:flex; justify-content:center;
+    }
+    .cta-inner { background:#fff; border:1px solid var(--line); border-radius:999px; box-shadow: var(--shadow); padding:8px; display:flex; gap:8px; }
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .search-grid { grid-template-columns: repeat(3, 1fr); }
+      .search-grid .wide { grid-column: span 3; }
+      .search-grid .xl { grid-column: span 3; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .cols-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 680px) {
+      .nav .links { display:none; }
+      .grid { grid-template-columns: 1fr; }
+      .cols-3, .cols-2 { grid-template-columns: 1fr; }
+      .hero-card { padding: 20px; }
+      .search-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky header -->
+  <header class="site">
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true">OT</div>
+        <a href="#" aria-label="Only Used Tesla home">Only Used Tesla</a>
+        <span class="chip" title="$47 basic ad">Private Seller Ad: $47</span>
+      </div>
+      <nav class="links" aria-label="Primary">
+        <a href="#shop">Shop</a>
+        <a href="#sell">Sell</a>
+        <a href="#cash-offer">Cash Offer</a>
+        <a href="#connect">Connect your Tesla</a>
+        <a href="#wholesale">Wholesale</a>
+        <a href="#dealers">Dealers</a>
+        <a href="#assistant">AI Assistant</a>
+      </nav>
+      <div class="row">
+        <a class="btn ghost" href="#" title="Sign in">Sign in</a>
+        <a class="btn" href="#sell">Create Listing — $47</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-card stack-lg">
+        <div class="stack">
+          <h1>Find or Sell a Used Tesla, fast.</h1>
+          <p class="sub">Ultra‑clean marketplace built for speed and clarity. Shop by what matters—range, Autopilot hardware/software, accident history, seat count, and Supercharging. List your Tesla for <strong>$47</strong> or request a <strong>cash offer</strong> that pings our dealer network.</p>
+          <div class="kpis">
+            <div class="kpi">Focus: Tesla‑only</div>
+            <div class="kpi">Fast TXT to seller</div>
+            <div class="kpi">Dealer wholesale exchange</div>
+            <div class="kpi">“Connect Your Tesla” optional</div>
+          </div>
+          <div class="row">
+            <a class="btn" href="#shop">Shop Used Teslas</a>
+            <a class="btn secondary" href="#sell">List My Tesla — $47</a>
+            <a class="btn ghost" href="#cash-offer">Get Cash Offer</a>
+          </div>
+        </div>
+
+        <!-- Quick Search / Filters -->
+        <form id="searchForm" class="search-panel stack" aria-label="Search filters">
+          <div class="row" style="justify-content:space-between">
+            <strong>Quick filters</strong>
+            <span class="small">No images. Pure signal.</span>
+          </div>
+          <div class="search-grid">
+            <div>
+              <label for="model">Model</label>
+              <select id="model" name="model">
+                <option value="">Any</option>
+                <option>Model S</option>
+                <option>Model 3</option>
+                <option>Model X</option>
+                <option>Model Y</option>
+                <option>Cybertruck</option>
+              </select>
+            </div>
+            <div>
+              <label for="apHw">AP Hardware</label>
+              <select id="apHw" name="apHw">
+                <option value="">Any</option>
+                <option>AP1</option>
+                <option>AP2</option>
+                <option>AP2.5</option>
+                <option>HW3</option>
+              </select>
+            </div>
+            <div>
+              <label for="apSw">AP Software</label>
+              <select id="apSw" name="apSw">
+                <option value="">Any</option>
+                <option>Basic AP</option>
+                <option>Enhanced AP</option>
+                <option>FSD Enabled</option>
+              </select>
+            </div>
+            <div>
+              <label for="accidents">Accidents</label>
+              <select id="accidents" name="accidents">
+                <option value="">Any</option>
+                <option>No</option>
+                <option>Yes</option>
+              </select>
+            </div>
+            <div>
+              <label for="seats">Seats (X)</label>
+              <select id="seats" name="seats">
+                <option value="">Any</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+              </select>
+            </div>
+            <div>
+              <label for="fusc">Free Unlimited Supercharging</label>
+              <select id="fusc" name="fusc">
+                <option value="">Any</option>
+                <option>Only FUSC</option>
+                <option>Exclude FUSC</option>
+              </select>
+            </div>
+            <div class="wide">
+              <label for="rangeMin">Est. Range (mi)</label>
+              <div class="row">
+                <input id="rangeMin" name="rangeMin" type="number" inputmode="numeric" placeholder="Min" />
+                <input id="rangeMax" name="rangeMax" type="number" inputmode="numeric" placeholder="Max" />
+              </div>
+            </div>
+            <div class="wide">
+              <label for="priceMax">Max Price ($)</label>
+              <input id="priceMax" name="priceMax" type="number" inputmode="numeric" placeholder="e.g. 35000">
+            </div>
+            <div class="xl">
+              <label for="text">Keyword</label>
+              <input id="text" name="text" type="text" placeholder="Trim, color, VIN, options…">
+            </div>
+            <div class="full row" style="justify-content:space-between; align-items:center;">
+              <div class="row">
+                <button class="btn" type="submit">Apply Filters</button>
+                <button class="btn secondary" type="reset" id="resetBtn">Reset</button>
+              </div>
+              <div class="row">
+                <label for="sort" class="small" style="padding-right:8px;">Sort</label>
+                <select id="sort" name="sort">
+                  <option value="relevant">Most relevant</option>
+                  <option value="price-asc">Price ↑</option>
+                  <option value="price-desc">Price ↓</option>
+                  <option value="range-desc">Range ↓</option>
+                  <option value="mileage-asc">Mileage ↑</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <details class="advanced">
+            <summary>Advanced: battery, title, owner, and more</summary>
+            <div class="search-grid" style="margin-top:12px;">
+              <div>
+                <label for="battery">Battery</label>
+                <select id="battery" name="battery">
+                  <option value="">Any</option>
+                  <option>90 kWh</option>
+                  <option>100 kWh</option>
+                  <option>Long Range</option>
+                  <option>Standard Range</option>
+                  <option>Performance</option>
+                </select>
+              </div>
+              <div>
+                <label for="title">Title Status</label>
+                <select id="title" name="title">
+                  <option value="">Any</option>
+                  <option>Clean</option>
+                  <option>Rebuilt/Salvage</option>
+                </select>
+              </div>
+              <div>
+                <label for="owner">Owners</label>
+                <select id="owner" name="owner">
+                  <option value="">Any</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3+</option>
+                </select>
+              </div>
+              <div>
+                <label for="odometerMax">Max Mileage</label>
+                <input id="odometerMax" name="odometerMax" type="number" inputmode="numeric" placeholder="e.g. 60,000" />
+              </div>
+            </div>
+          </details>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Listing grid demo -->
+  <section id="shop">
+    <div class="container stack-lg">
+      <div class="row" style="justify-content:space-between;">
+        <h2 style="margin:0;">Live Listings (demo)</h2>
+        <span class="small">Filters above update these instantly.</span>
+      </div>
+      <div id="results" class="grid">
+        <!-- Card 1 -->
+        <article class="card" tabindex="0"
+          data-model="Model 3" data-range="310" data-ap-hw="AP2.5" data-ap-sw="Enhanced AP" data-accidents="No"
+          data-seats="" data-fusc="No" data-price="23900" data-mileage="52000" data-title="Clean">
+          <div class="title">2018 Model 3 Long Range RWD</div>
+          <div class="kv">
+            <div><span>Est. Range</span><strong>310 mi</strong></div>
+            <div><span>Autopilot HW</span><strong>AP2.5</strong></div>
+            <div><span>AP Software</span><strong>EAP</strong></div>
+            <div><span>Accidents</span><strong>None</strong></div>
+            <div><span>Mileage</span><strong>52,000</strong></div>
+            <div><span>FUSC</span><strong>No</strong></div>
+          </div>
+          <div class="tags">
+            <span class="pill">Clean title</span>
+            <span class="pill">1 owner</span>
+          </div>
+          <div class="row" style="justify-content:space-between; align-items:center;">
+            <div class="price">$23,900</div>
+            <div class="row">
+              <a class="btn ghost" href="sms:+15555551234?body=Hi%2C%20I%27m%20interested%20in%20your%202018%20Model%203." title="Text seller">Text seller</a>
+              <a class="btn secondary" href="#">View</a>
+            </div>
+          </div>
+          <div class="note">VIN verified • Private Seller</div>
+        </article>
+        <!-- Card 2 -->
+        <article class="card" tabindex="0"
+          data-model="Model S" data-range="335" data-ap-hw="AP2" data-ap-sw="FSD Enabled" data-accidents="No"
+          data-seats="" data-fusc="Yes" data-price="32900" data-mileage="68000" data-title="Clean">
+          <div class="title">2017 Model S 100D AWD</div>
+          <div class="kv">
+            <div><span>Est. Range</span><strong>335 mi</strong></div>
+            <div><span>Autopilot HW</span><strong>AP2</strong></div>
+            <div><span>AP Software</span><strong>FSD</strong></div>
+            <div><span>Accidents</span><strong>None</strong></div>
+            <div><span>Mileage</span><strong>68,000</strong></div>
+            <div><span>FUSC</span><strong>Yes</strong></div>
+          </div>
+          <div class="tags">
+            <span class="pill">Clean title</span>
+            <span class="pill">FUSC eligible</span>
+          </div>
+          <div class="row" style="justify-content:space-between; align-items:center;">
+            <div class="price">$32,900</div>
+            <div class="row">
+              <a class="btn ghost" href="sms:+15555554321?body=Hi%2C%20I%27m%20interested%20in%20your%202017%20Model%20S%20100D." title="Text seller">Text seller</a>
+              <a class="btn secondary" href="#">View</a>
+            </div>
+          </div>
+          <div class="note">Dealer listing</div>
+        </article>
+        <!-- Card 3 -->
+        <article class="card" tabindex="0"
+          data-model="Model X" data-range="257" data-ap-hw="AP1" data-ap-sw="Basic AP" data-accidents="Yes"
+          data-seats="6" data-fusc="Yes" data-price="28900" data-mileage="91000" data-title="Rebuilt/Salvage">
+          <div class="title">2016 Model X 90D — 6‑Seat</div>
+          <div class="kv">
+            <div><span>Est. Range</span><strong>257 mi</strong></div>
+            <div><span>Autopilot HW</span><strong>AP1</strong></div>
+            <div><span>AP Software</span><strong>Basic AP</strong></div>
+            <div><span>Accidents</span><strong>Reported</strong></div>
+            <div><span>Mileage</span><strong>91,000</strong></div>
+            <div><span>FUSC</span><strong>Yes</strong></div>
+          </div>
+          <div class="tags">
+            <span class="pill">6 seats</span>
+            <span class="pill">Rebuilt title</span>
+          </div>
+          <div class="row" style="justify-content:space-between; align-items:center;">
+            <div class="price">$28,900</div>
+            <div class="row">
+              <a class="btn ghost" href="sms:+15555559876?body=Hi%2C%20I%27m%20interested%20in%20your%202016%20Model%20X%2090D%20(6-seat)." title="Text seller">Text seller</a>
+              <a class="btn secondary" href="#">View</a>
+            </div>
+          </div>
+          <div class="note">Private seller • records available</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sell + Cash Offer -->
+  <section id="sell">
+    <div class="container cols-2">
+      <div class="panel stack">
+        <h3 style="margin:0;">List your Tesla — $47</h3>
+        <p class="sub">Create a clean, simple ad that surfaces what buyers care about: range, Autopilot HW/SW, accident history, seats, and Supercharging status. Optional add‑ons: vehicle history reports, 360° video, YouTube boost.</p>
+        <div class="row">
+          <a class="btn" href="#">Start listing — $47</a>
+          <span class="chip">No long forms</span>
+          <span class="chip">Publish in minutes</span>
+        </div>
+      </div>
+      <div id="cash-offer" class="panel stack">
+        <h3 style="margin:0;">Get a Cash Offer</h3>
+        <p class="sub">Skip listings. We blast your Tesla details to our vetted dealer network and route offers back to you. Fast SMS updates.</p>
+        <div class="row">
+          <a class="btn ghost" href="#">Request cash offer</a>
+          <span class="chip">Dealer network</span>
+          <span class="chip">No obligation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Connect + Wholesale + Dealers -->
+  <section>
+    <div class="container cols-3">
+      <div id="connect" class="panel stack">
+        <h3 style="margin:0;">Connect your Tesla (beta)</h3>
+        <p class="sub">Optionally verify VIN, battery health signals, software, and odometer to boost buyer confidence. Read‑only. You stay in control.</p>
+        <a class="btn secondary" href="#" data-slot="connect">Connect now</a>
+        <div class="note">Developer hook: <code>data-slot="connect"</code></div>
+      </div>
+      <div id="wholesale" class="panel stack">
+        <h3 style="margin:0;">Dealer Wholesale Exchange</h3>
+        <p class="sub">Dealer‑to‑dealer bids for Tesla inventory. Modern, lightweight, and SMS‑first.</p>
+        <a class="btn secondary" href="#" data-slot="wholesale">Request access</a>
+        <div class="note">Developer hook: <code>data-slot="wholesale"</code></div>
+      </div>
+      <div id="dealers" class="panel stack">
+        <h3 style="margin:0;">Dealers: Advertise with us</h3>
+        <p class="sub">Import your Tesla inventory feed. Simple monthly plan. We optimize search + buyer messaging for you.</p>
+        <div class="row">
+          <a class="btn" href="#" data-slot="dealer-plan">Contact sales</a>
+          <span class="chip">CSV / FTP feeds</span>
+          <span class="chip">AI chat for your cars</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section>
+    <div class="container">
+      <div class="panel">
+        <h3 style="margin-top:0;">How it works</h3>
+        <div class="cols-3">
+          <div class="stack">
+            <strong>1) Focused shopping</strong>
+            <p class="small">Filters built for Teslas only: Autopilot HW/SW, range, FUSC, seats, accident history.</p>
+          </div>
+          <div class="stack">
+            <strong>2) Direct TXT to seller</strong>
+            <p class="small">Buyers can message sellers instantly. Optional AI assist answers common questions 24/7.</p>
+          </div>
+          <div class="stack">
+            <strong>3) Optional verification</strong>
+            <p class="small">“Connect Your Tesla” adds read‑only signals to listings for confidence and faster decisions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Assistant slot -->
+  <section id="assistant">
+    <div class="container panel">
+      <h3 style="margin:0;">AI Assistant (placeholder)</h3>
+      <p class="sub">This is a non‑functional slot for now. We’ll embed OUT‑AI here to help shoppers compare listings and help sellers create the perfect $47 ad.</p>
+      <div id="ai-assistant-slot" style="height: 60px; border:1px dashed var(--line); border-radius:12px; display:grid; place-items:center;">
+        <span class="small">Embed widget here</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky CTA bar -->
+  <div class="cta-bar" aria-hidden="false">
+    <div class="cta-inner">
+      <a class="btn" href="#shop">Shop</a>
+      <a class="btn secondary" href="#sell">List — $47</a>
+      <a class="btn ghost" href="#cash-offer">Cash Offer</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container stack">
+      <div class="row" style="justify-content:space-between; align-items:center;">
+        <div class="row" style="gap:20px;">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <a href="#">Contact</a>
+        </div>
+        <span class="small">© Only Used Tesla. We don’t sell user data.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // === Instant front-end filtering for the demo grid ===
+    const form = document.getElementById('searchForm');
+    const results = document.getElementById('results');
+    const cards = Array.from(results.querySelectorAll('.card'));
+    const resetBtn = document.getElementById('resetBtn');
+    const sortSelect = document.getElementById('sort');
+
+    function normalize(val) { return (val || '').toString().trim().toLowerCase(); }
+
+    function passFilters(card, filters) {
+      const get = (attr) => card.getAttribute(attr) || '';
+      // Model
+      if (filters.model && normalize(get('data-model')) !== normalize(filters.model)) return false;
+      // AP HW
+      if (filters.apHw && normalize(get('data-ap-hw')) !== normalize(filters.apHw)) return false;
+      // AP SW
+      if (filters.apSw && normalize(get('data-ap-sw')) !== normalize(filters.apSw)) return false;
+      // Accidents
+      if (filters.accidents && normalize(get('data-accidents')) !== normalize(filters.accidents)) return false;
+      // Seats (Model X specific, but we treat generally)
+      if (filters.seats) {
+        const seatVal = (get('data-seats') || '').toString();
+        if (seatVal !== filters.seats) return false;
+      }
+      // FUSC
+      if (filters.fusc) {
+        const fusc = normalize(get('data-fusc'));
+        if (filters.fusc === 'Only FUSC' && fusc !== 'yes') return false;
+        if (filters.fusc === 'Exclude FUSC' && fusc === 'yes') return false;
+      }
+      // Range min/max
+      const range = parseInt(get('data-range') || '0', 10);
+      if (filters.rangeMin && range < parseInt(filters.rangeMin, 10)) return false;
+      if (filters.rangeMax && range > parseInt(filters.rangeMax, 10)) return false;
+      // Price max
+      const price = parseInt(get('data-price') || '0', 10);
+      if (filters.priceMax && price > parseInt(filters.priceMax, 10)) return false;
+      // Mileage max
+      const miles = parseInt(get('data-mileage') || '0', 10);
+      if (filters.odometerMax && miles > parseInt(filters.odometerMax, 10)) return false;
+      // Keyword search simple (in title)
+      const text = normalize(form.text.value);
+      if (text) {
+        const title = (card.querySelector('.title')?.textContent || '').toLowerCase();
+        if (!title.includes(text)) return false;
+      }
+      return true;
+    }
+
+    function sortCards(list, mode) {
+      const byNum = (attr, dir = 1) => (a, b) => dir * ((parseInt(a.getAttribute(attr) || '0', 10)) - (parseInt(b.getAttribute(attr) || '0', 10)));
+      const modes = {
+        'price-asc': byNum('data-price', 1),
+        'price-desc': byNum('data-price', -1),
+        'range-desc': byNum('data-range', -1),
+        'mileage-asc': byNum('data-mileage', 1),
+      };
+      return list.sort(modes[mode] || (() => 0));
+    }
+
+    function applyFilters(ev) {
+      if (ev) ev.preventDefault();
+      const filters = Object.fromEntries(new FormData(form).entries());
+      // Filter
+      const visible = cards.filter(c => passFilters(c, filters));
+      const hidden = cards.filter(c => !passFilters(c, filters));
+      hidden.forEach(c => c.style.display = 'none');
+      visible.forEach(c => c.style.display = '');
+      // Sort
+      const mode = sortSelect.value;
+      const ordered = sortCards(visible.slice(), mode);
+      ordered.forEach(el => results.appendChild(el)); // reflow in order
+    }
+
+    form.addEventListener('submit', applyFilters);
+    form.addEventListener('change', (e) => {
+      if (e.target && e.target.tagName.match(/(INPUT|SELECT)/)) applyFilters();
+    });
+    resetBtn.addEventListener('click', () => {
+      setTimeout(applyFilters, 0);
+    });
+  </script>
+</body>
+</html>
