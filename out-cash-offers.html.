@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Only Used Tesla — Cash Offer Inventory (Dealer MVP)</title>
+  <style>
+    :root{
+      --bg:#f6f7f8; --ink:#1a1a1a; --muted:#6b7280; --card:#ffffff; --line:#e5e7eb; --accent:#111827;
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font:16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;color:var(--ink);background:var(--bg)}
+    header{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--line);z-index:20}
+    .wrap{max-width:1100px;margin:0 auto;padding:16px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand .logo{width:32px;height:32px;border-radius:8px;background:#ddd;display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+    .subnav{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+    .pill{background:#f0f2f5;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--muted)}
+    .grid{display:grid;gap:16px}
+    .filters{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:grid;gap:12px}
+    .filters form{display:grid;grid-template-columns:1.2fr .8fr .8fr .8fr .8fr .8fr;gap:10px}
+    .filters input,.filters select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fafafa}
+    .filters .actions{display:flex;gap:10px}
+    .btn{padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:#f9fafb;color:var(--ink);cursor:pointer}
+    .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .btn.ghost{background:#fff}
+    .results{background:var(--card);border:1px solid var(--line);border-radius:var(--radius)}
+    table{width:100%;border-collapse:separate;border-spacing:0}
+    th,td{padding:14px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
+    th{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.02em}
+    tr:last-child td{border-bottom:none}
+    .badge{font-size:12px;padding:4px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .muted{color:var(--muted)}
+    .right{text-align:right}
+    .table-actions{display:flex;gap:8px}
+
+    /* Detail view */
+    .detail{display:none}
+    .detail.show{display:block}
+    .detail .cols{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+    .gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .gallery .ph{aspect-ratio:16/10;background:#e5e7eb;border-radius:12px}
+    .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+    .specs div{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fafafa}
+    .kv{display:flex;justify-content:space-between;gap:10px}
+    .kv small{color:var(--muted)}
+    .offer-box .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .offer-box input,.offer-box select, .offer-box textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fafafa}
+    .offer-box .terms{display:grid;gap:8px;margin:10px 0}
+    .gauge{height:10px;background:#e5e7eb;border-radius:999px;position:relative}
+    .gauge .fill{position:absolute;inset:0;right:auto;width:94%;background:#111827;border-radius:999px}
+
+    footer{color:var(--muted);font-size:12px;padding:24px 0;text-align:center}
+
+    @media (max-width: 980px){
+      .filters form{grid-template-columns:1fr 1fr 1fr}
+      .detail .cols{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">
+        <div class="logo">OUT</div>
+        <div>
+          <div style="font-weight:700">Only Used Tesla</div>
+          <div class="muted" style="font-size:13px">Dealer Buying Center · Cash Offer Inventory (MVP)</div>
+        </div>
+      </div>
+      <div class="subnav">
+        <span class="pill">Subscription: <strong>Pro Trial</strong> · $199/mo</span>
+        <span class="pill">Bids left: <strong>12</strong></span>
+        <span class="pill">Contact unlocks: <strong>4</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap grid" id="app">
+
+    <!-- FILTERS / LIST VIEW -->
+    <section class="filters" id="filters">
+      <form onsubmit="event.preventDefault()">
+        <input type="search" placeholder="Search by VIN, model, trim…" aria-label="search" />
+        <input type="text" placeholder="ZIP" aria-label="zip" />
+        <select aria-label="model">
+          <option value="">Any Model</option>
+          <option>Model 3</option>
+          <option>Model Y</option>
+          <option>Model S</option>
+          <option>Model X</option>
+          <option>Cybertruck</option>
+        </select>
+        <select aria-label="title">
+          <option value="">Title Status</option>
+          <option>Clean, title in hand</option>
+          <option>Loan / payoff needed</option>
+          <option>Rebuilt / salvage</option>
+        </select>
+        <select aria-label="sort">
+          <option>Sort: Newest</option>
+          <option>Sort: Ending soon</option>
+          <option>Sort: Highest score</option>
+          <option>Sort: Top offer</option>
+        </select>
+        <div class="actions">
+          <button class="btn">Reset</button>
+          <button class="btn primary">Search</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="results" id="results">
+      <table role="table" aria-label="Cash offer inventory table">
+        <thead>
+          <tr>
+            <th>Vehicle</th>
+            <th>VIN</th>
+            <th>Miles</th>
+            <th>ZIP</th>
+            <th>Range Score</th>
+            <th>Docs</th>
+            <th class="right">Top Offer</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- ROW 1 -->
+          <tr>
+            <td>
+              <div style="font-weight:600">2023 Tesla Model Y · Long Range AWD</div>
+              <div class="muted" style="font-size:13px">Blue / Black · Cambridge, MA</div>
+            </td>
+            <td class="mono">7SAYGDEEXPA178164</td>
+            <td>18,520</td>
+            <td>02141</td>
+            <td>
+              <span class="badge">94</span>
+            </td>
+            <td>
+              <span class="badge" title="Carfax uploaded">Carfax</span>
+              <span class="badge" title="Title status provided">Title</span>
+              <span class="badge" title="Payoff on file">Payoff</span>
+            </td>
+            <td class="right">$26,500</td>
+            <td class="table-actions">
+              <button class="btn" onclick="openDetail('vy-1')">View</button>
+            </td>
+          </tr>
+          <!-- ROW 2 -->
+          <tr>
+            <td>
+              <div style="font-weight:600">2022 Tesla Model 3 · RWD</div>
+              <div class="muted" style="font-size:13px">White / Black · Newark, NJ</div>
+            </td>
+            <td class="mono">5YJ3E1EA8NF256001</td>
+            <td>32,140</td>
+            <td>07102</td>
+            <td><span class="badge">90</span></td>
+            <td><span class="badge">Title</span></td>
+            <td class="right">$17,800</td>
+            <td class="table-actions"><button class="btn" onclick="openDetail('m3-2')">View</button></td>
+          </tr>
+          <!-- ROW 3 -->
+          <tr>
+            <td>
+              <div style="font-weight:600">2018 Tesla Model S · 100D</div>
+              <div class="muted" style="font-size:13px">Black / Cream · Queens, NY</div>
+            </td>
+            <td class="mono">5YJSA1E26JF250123</td>
+            <td>61,280</td>
+            <td>11101</td>
+            <td><span class="badge">88</span></td>
+            <td><span class="badge">Carfax</span> <span class="badge">Photos</span></td>
+            <td class="right">$24,200</td>
+            <td class="table-actions"><button class="btn" onclick="openDetail('ms-3')">View</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- DETAIL VIEW (hidden by default) -->
+    <section class="detail" id="detail">
+      <div class="card" style="margin-bottom:8px">
+        <button class="btn" onclick="closeDetail()">← Back to results</button>
+      </div>
+      <div class="cols">
+        <!-- LEFT: vehicle -->
+        <div class="grid">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+              <div>
+                <h2 style="margin:0 0 4px">2023 Tesla Model Y · Long Range AWD</h2>
+                <div class="muted">VIN <span class="mono">7SAYGDEEXPA178164</span> · Cambridge, MA 02141</div>
+              </div>
+              <div class="badge">Listed 8 days ago</div>
+            </div>
+            <div class="gallery" style="margin-top:12px">
+              <div class="ph"></div>
+              <div class="ph"></div>
+              <div class="ph"></div>
+              <div class="ph"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top:0">Vehicle Details</h3>
+            <div class="specs">
+              <div class="kv"><small>Odometer</small><strong>18,520 mi</strong></div>
+              <div class="kv"><small>Exterior</small><strong>Blue</strong></div>
+              <div class="kv"><small>Interior</small><strong>Black</strong></div>
+              <div class="kv"><small>Seats</small><strong>5</strong></div>
+              <div class="kv"><small>Title</small><strong>Loan / payoff $21,300</strong></div>
+              <div class="kv"><small>Condition</small><strong>Clean · minor curb rash</strong></div>
+            </div>
+
+            <div style="margin-top:14px">
+              <div class="kv"><small>Battery Health</small><strong>92%</strong></div>
+              <div class="kv"><small>Range Score</small><strong>94 (Expected 304 mi · EPA 330 mi)</strong></div>
+              <div class="gauge" aria-label="range score gauge"><div class="fill"></div></div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+              <span class="badge">Carfax on file</span>
+              <span class="badge">Photos 12</span>
+              <span class="badge">Acceleration Boost</span>
+            </div>
+
+            <div style="margin-top:14px">
+              <small class="muted">Seller notes:</small>
+              <div>Single owner. Highway miles. Small scratch rear bumper. Includes mobile connector.</div>
+            </div>
+          </div>
+
+          <div class="card" id="contactCard">
+            <h3 style="margin:0 0 6px">Seller Contact</h3>
+            <div id="lockedContact">
+              <div class="muted" style="margin-bottom:8px">Hidden until you make an offer or unlock (uses 1 contact credit).</div>
+              <button class="btn" onclick="unlockContact()">Unlock contact (1 credit)</button>
+            </div>
+            <div id="contactDetails" style="display:none">
+              <div class="kv"><small>Name</small><strong>J*** P*** (initials only)</strong></div>
+              <div class="kv"><small>City</small><strong>Cambridge, MA</strong></div>
+              <div class="kv"><small>Phone</small><strong>(xxx) xxx‑3124</strong></div>
+              <div class="kv"><small>Email</small><strong>j***@***.com</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: offer panel -->
+        <aside class="grid">
+          <div class="card offer-box">
+            <div class="kv"><small>Current Top Offer</small><strong style="font-size:22px">$26,500</strong></div>
+            <div class="kv"><small>Your Max Auto‑Bid</small><strong class="muted">Optional</strong></div>
+            <div class="row" style="margin-top:6px">
+              <input type="number" placeholder="Your offer ($)" id="offerInput" />
+              <input type="number" placeholder="Auto‑bid up to ($)" id="maxInput" />
+            </div>
+            <textarea rows="3" placeholder="Add a note to OUT (e.g., contingent on inspection, transport included)"></textarea>
+            <div class="terms">
+              <label><input type="checkbox" checked /> Subject to in‑person inspection</label>
+              <label><input type="checkbox" checked /> No frame/battery damage</label>
+              <label><input type="checkbox" /> Proof of payoff / title required</label>
+              <label><input type="checkbox" /> 7‑day offer expiration</label>
+            </div>
+            <button class="btn primary" onclick="submitOffer()">Make Offer</button>
+            <div id="offerFlash" class="muted" style="display:none;margin-top:8px">Offer submitted. We'll notify the seller.</div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top:0">Deal Checklist</h3>
+            <ul style="margin:0 0 8px 18px;line-height:1.6">
+              <li>Driver license & registration</li>
+              <li>Title in hand or lender payoff letter</li>
+              <li>Carfax / Autocheck disclosed</li>
+              <li>12+ photos incl. VIN & odometer</li>
+            </ul>
+            <div class="muted" style="font-size:13px">Use the notes field to add transport, payment method, or timing.</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    OUT · Cash Offer Inventory MVP · This is a static UI demo (no backend yet).
+  </footer>
+
+  <script>
+    const detailEl = document.getElementById('detail');
+    const resultsEl = document.getElementById('results');
+    const filtersEl = document.getElementById('filters');
+
+    function openDetail(id){
+      // In a real app, fetch by id. For demo we just show the prebuilt detail view
+      detailEl.classList.add('show');
+      resultsEl.style.display='none';
+      filtersEl.style.display='none';
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function closeDetail(){
+      detailEl.classList.remove('show');
+      resultsEl.style.display='block';
+      filtersEl.style.display='grid';
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function submitOffer(){
+      const val = document.getElementById('offerInput').value || '';
+      document.getElementById('offerFlash').style.display='block';
+      if(val){
+        // reveal contact after offer in this demo
+        unlockContact();
+      }
+    }
+    function unlockContact(){
+      document.getElementById('lockedContact').style.display='none';
+      document.getElementById('contactDetails').style.display='block';
+    }
+  </script>
+</body>
+</html>
